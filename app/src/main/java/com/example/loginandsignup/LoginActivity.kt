@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
         //configure progress dialog
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait")
+        progressDialog.setTitle("Please wait a sec")
         progressDialog.setMessage("logging In...")
         progressDialog.setCanceledOnTouchOutside(false)
 
