@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
         //configure progress dialog
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait a sec")
+        progressDialog.setTitle("Please wait ")
         progressDialog.setMessage("logging In...")
         progressDialog.setCanceledOnTouchOutside(false)
 
@@ -95,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
                 //get user info
                 val fireBaseUser = fireBAseAuth.currentUser
                 val email = fireBaseUser!!.email
-                Toast.makeText(this,"logged as $email", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"logged-In as $email", Toast.LENGTH_SHORT).show()
 
                 //open profile
                 startActivity(Intent(this, ProfileActivity::class.java))
