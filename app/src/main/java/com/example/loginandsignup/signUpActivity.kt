@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
-import com.example.loginandsignup.databinding.ActivityLoginBinding
 import com.example.loginandsignup.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -28,6 +27,9 @@ class signUpActivity : AppCompatActivity() {
     // global values
     private var email = ""
     private var password = ""
+    private var password1 = ""
+    private var password2 = ""
+    private var phone = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,11 +62,16 @@ class signUpActivity : AppCompatActivity() {
         //get Data
         email = binding.emailEt.text.toString().trim()
         password = binding.passwordEt.text.toString().trim()
+        password2 = binding.passwordsEt.text.toString().trim()
+        phone = binding.phoneEt.text.toString().trim()
 
         //validate data
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             //invalid email format
             binding.emailEt.error = "Invalid email format"
+        }else if(!Patterns.PHONE.matcher(phone).matches()){
+            //password empty
+            binding.passwordEt.error = "Please enter password"
         }
         else if(TextUtils.isEmpty(password)){
             //password empty
@@ -76,15 +83,40 @@ class signUpActivity : AppCompatActivity() {
         }
         else{
             //data is validated
-                fireBaseSignUp()
+                fireBaseSignUpEmail()
         }
     }
 
-    private fun fireBaseSignUp() {
+    private fun fireBaseSignUpEmail() {
          //show progress
         progressDialog.show()
 
     // create account
+        fireBAseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                //signup success
+                progressDialog.dismiss()
+
+                //get current user
+                val fireBaseUser = fireBAseAuth.currentUser
+                val email = fireBaseUser!!.email
+                Toast.makeText(this, "Account created Successfully with email $email", Toast.LENGTH_SHORT).show()
+
+                startActivity(Intent(this, ProfileActivity::class.java))
+                finish()
+            }
+            .addOnFailureListener {  e->
+                //signup failed
+                progressDialog.dismiss()
+                Toast.makeText(this, "SignUp Failed due to ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+    private fun fireBaseSignUpPhone() {
+        //show progress
+        progressDialog.show()
+
+        // create account
+
         fireBAseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 //signup success
