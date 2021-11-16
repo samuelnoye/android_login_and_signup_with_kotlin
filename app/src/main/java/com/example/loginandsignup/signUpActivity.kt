@@ -1,5 +1,7 @@
 package com.example.loginandsignup
 
+import android.R.attr
+import android.app.PendingIntent.getActivity
 import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +12,10 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import com.example.loginandsignup.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
+import android.R.attr.phoneNumber
+import android.content.ContentValues.TAG
+import android.util.Log
+
 
 class signUpActivity : AppCompatActivity() {
     //ViewBinding
@@ -27,7 +33,6 @@ class signUpActivity : AppCompatActivity() {
     // global values
     private var email = ""
     private var password = ""
-    private var password1 = ""
     private var password2 = ""
     private var phone = ""
 
@@ -69,9 +74,9 @@ class signUpActivity : AppCompatActivity() {
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             //invalid email format
             binding.emailEt.error = "Invalid email format"
-        }else if(!Patterns.PHONE.matcher(phone).matches()){
+        }else if(Patterns.PHONE.matcher(phone).matches()){
             //password empty
-            binding.passwordEt.error = "Please enter password"
+            startActivity(Intent(this,VerifyActivity::class.java))
         }
         else if(TextUtils.isEmpty(password)){
             //password empty
@@ -80,11 +85,31 @@ class signUpActivity : AppCompatActivity() {
             //password length is less than 6
            binding.passwordEt.error = "Password must be atleast 6 characters long"
 
+        }else if(!password.equals(password2)){
+            //password length is less than 6
+            binding.passwordEt.error = "Passwords must match"
+
         }
         else{
             //data is validated
                 fireBaseSignUpEmail()
+            var intent = Intent(applicationContext,VerifyActivity::class.java)
+            intent.putExtra("phone", phone )
+            startActivity(intent)
+
+            val phone = Intent(applicationContext, VerifyActivity::class.java)
+            phone.putExtra(
+                "phone",
+                "+$phone"
+            )
+            startActivity(phone)
+            Log.d(
+                TAG,
+                "onSuccess: +$phone"
+            )
+
         }
+
     }
 
     private fun fireBaseSignUpEmail() {
